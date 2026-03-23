@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="Primary_Blue">#6B9AC4</color>
+    <color name="Secondary_Green">#A8C69F</color>
+    <color name="Light_Green">#7F897C</color> <!-- Wellness/meditation features and success states -->
+    <color name="Accent_Beige">#D4B5A0</color> <!-- Social interaction accents-->
+<!--    Background Colors:-->
+    <color name="Warm_Beige">#FAF8F5</color> <!-- Main app background-->
+    <color name="White">#FFFFFF</color> <!-- Card backgrounds-->
+    <color name="Muted">#E8E5E0</color> <!-- Disabled states and subtle background-->
+<!--    Text Colors:-->
+    <color name="Dark_Gray">#2D3748</color> <!-- Primary text -->
+    <color name="Medium_Gray">#718096</color><!-- Secondary text and descriptions-->
+<!--    Special Colors:-->
+    <color name="Orange">#F97316</color> <!-- Streak indicators and fire icons-->
+    <color name="Terracotta">#E07A5F</color> <!-- Errors and warnings-->
+    <color name="Light_Orange">#FFF7ED</color>
+    <color name="Gradient_Green">#C5E0BF</color>
+    <color name="Iron_Circle_Foreground">#6B9AC4</color>
+    <color name="Iron_Circle_Background">#E1EBF3</color>
+    <color name="Input_Fields">#F7F5F2</color>
+    <color name="Form_Label_Icons">#6B9AC4</color>
+    <color name="Sign_Up_Button"> #A8C69F </color>
+    <color name="Success_Green">#6B9AC4</color>
+
+"
+
+</resources>
