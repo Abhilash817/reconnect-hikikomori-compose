@@ -8,11 +8,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.reconnect.RoomUser.AuthViewModel
+import com.example.reconnect.RoomUser.StreakViewModel
+import com.example.reconnect.settingcomposables.SettingsScreen
 
 @Composable
-fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValues){
+fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValues,authViewModel: AuthViewModel){
     val viewModel:ReconnectViewModel= viewModel()
-
+    val stViewModel: StreakViewModel = viewModel()
     NavHost(navController, startDestination = "BottomBarRoute"){
         val onNavigateToHomeScreen= {
             if (!navController.popBackStack()) {
@@ -29,23 +32,28 @@ fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValu
             route = "BottomBarRoute"
         ){
             composable("HomeRoute") {
-                HomeScreen(viewModel,onNavigateToClockScreen,paddingValues)
+                HomeScreen(viewModel,onNavigateToClockScreen,paddingValues,stViewModel)
             }
             composable("StreakRoute") {
                 StreakScreen(  {navController.navigate("HomeRoute"){
                     popUpTo(navController.graph.findStartDestination().id){
                         inclusive=true
                     }
-                }},paddingValues = paddingValues)
+                }},paddingValues = paddingValues,
+                    stViewModel)
 
             }
             composable("SettingsRoute") {
                 SettingsScreen({
-                    navController.navigate("HomeRoute"){
-                        popUpTo(navController.graph.findStartDestination().id){
-                            inclusive=true
+                    navController.navigate("HomeRoute") {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = true
                         }
-                    }},paddingValues = paddingValues)
+                    }
+                }, paddingValues = paddingValues,profileScreen= {
+                    authViewModel.logOut()
+                }
+                )
             }
         }
         navigation(
@@ -53,7 +61,7 @@ fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValu
             route="SideBarRoute"
         ){
           composable("ClockScreenRoute"){
-                ClockScreen(viewModel = viewModel,onNavigateToHomeScreen)
+                ClockScreen(viewModel = viewModel,onNavigateToHomeScreen,stViewModel)
             }
         }
     }

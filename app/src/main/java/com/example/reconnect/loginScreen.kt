@@ -1,6 +1,8 @@
 package com.example.reconnect
 
 
+import android.R.attr.enabled
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,12 +27,14 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 
@@ -53,6 +57,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.reconnect.RoomUser.AuthState
 import com.example.reconnect.RoomUser.AuthViewModel
 import com.example.reconnect.composables.ReconnectTextFieldComposable
 
@@ -63,9 +68,17 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
     val email = remember{mutableStateOf("")}
     val keyboardController= LocalSoftwareKeyboardController.current
     val context=LocalContext.current
-    val isLoggedIn by vm.isLoggedIn.collectAsStateWithLifecycle()
+    val loginState by vm.isLoggedIn.collectAsStateWithLifecycle()
 
+        LaunchedEffect(loginState.isLoggedIn,loginState.error){
+          if(loginState.isLoggedIn){
+              Toast.makeText(context,"Login Successful",Toast.LENGTH_SHORT).show()
+          }
+              loginState.error?.let{
+              Toast.makeText(context,loginState.error,Toast.LENGTH_SHORT).show()
+          }
 
+        }
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
                 .background(color = colorResource(R.color.Warm_Beige)),
@@ -161,7 +174,6 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
                         icon = Icons.Default.Email,
                         iconText = "Email",
                         keyboardActions = KeyboardActions(
-                            onAny = { keyboardController?.hide() }
                         ),
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
@@ -174,22 +186,9 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
                         icon = Icons.Filled.Password,
                         iconText = "Password",
                         keyboardActions = KeyboardActions(
-                            onDone = { keyboardController?.hide()
-                                if(email.value.isNotBlank()&&password.value.isNotBlank()) {
-                                    if(isValidEmail(email.value)&&password.value.length>8) {
-                                        vm.checkUser(
-                                            email.value.trim(),
-                                            password.value.trim()
-                                        ).isCompleted
-                                    }
-                                    else{
-                                        Toast.makeText(context,"Invalid Details",Toast.LENGTH_LONG).show()
-
-                                    }
-                                }
-                                else{
-                                    Toast.makeText(context,"Please fill all the fields",Toast.LENGTH_SHORT).show()
-                                }
+                            onAny = {
+                                keyboardController?.hide()
+                                vm.checkUser(email.value, password.value)
                             }
                         ),
                         keyboardOptions = KeyboardOptions(
@@ -200,19 +199,9 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
             }
             Spacer(modifier = Modifier.height(20.dp))
             Card(
-                modifier = Modifier.fillMaxWidth(0.8f).height(50.dp).clickable {
-                    if(email.value.isNotBlank()&&password.value.isNotBlank()) {
-                        keyboardController?.hide()
-                        if(isValidEmail(email.value)&&password.value.length>8) {
-                            vm.checkUser(email.value.trim(), password.value.trim()).isCompleted
-                        }
-                        else{
-                            Toast.makeText(context,"Invalid Details",Toast.LENGTH_LONG).show()
-                        }
-                    }
-                    else{
-                        Toast.makeText(context,"Please fill all the fields",Toast.LENGTH_SHORT).show()
-                    }
+                modifier = Modifier.fillMaxWidth(0.8f).height(50.dp).clickable(enabled = !loginState.isLoading) {
+                    vm.checkUser(email.value, password.value)
+                    keyboardController?.hide()
                 },
                 colors = CardDefaults.cardColors(containerColor = colorResource(R.color.Form_Label_Icons)),
                 shape = RoundedCornerShape(20.dp)

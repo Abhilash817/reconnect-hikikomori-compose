@@ -15,7 +15,7 @@ sealed interface ClockScreenAction{
     data object PauseTimer: ClockScreenAction
     data object ResetTimer: ClockScreenAction
 }
-
+data class ReconnectClockStatus(val clockStatus:Boolean?)
 //@Serializable
 //data object HomeScreenRoute
 //

@@ -10,22 +10,29 @@ import kotlinx.coroutines.launch
 class ReconnectViewModel: ViewModel() {
     val _timer = MutableStateFlow(ReconnectClock(600))       //60*10=600seconds
     val timer=_timer.asStateFlow()
+
+    val _clockStatus=MutableStateFlow(ReconnectClockStatus(false))
+    val clockStatus=_clockStatus.asStateFlow()
+
 var timeJob:kotlinx.coroutines.Job?=null
 
     fun decreaseTimer() {
         timeJob?.cancel()
       timeJob=  viewModelScope.launch {
-
-
            while(_timer.value.CurrentSeconds>0){
                 delay(1000)
                 _timer.value = _timer.value.copy(CurrentSeconds = _timer.value.CurrentSeconds - 1)
             }
+          _clockStatus.value=_clockStatus.value.copy(clockStatus=true)
+            timeJob?.cancel()
         }
     }
+
     private fun pauseTimer(){
         timeJob?.cancel()
     }
+
+
 
     fun doAction(action: ClockScreenAction) {
         when (action) {

@@ -21,10 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.reconnect.RoomUser.AuthViewModel
 import com.example.reconnect.composables.ReconnectBottomAppBar
 
 @Composable
-fun ReconnectApp(){
+fun ReconnectApp(authViewModel: AuthViewModel){
     val navController= rememberNavController()
 val showBottomBarState= navController.currentBackStackEntryAsState().value?.destination?.route in listOf("HomeRoute","StreakRoute","SettingsRoute")
     Scaffold(modifier = Modifier.fillMaxSize().background(color = colorResource(R.color.Accent_Beige)).systemBarsPadding(), containerColor = Color.Transparent
@@ -37,6 +38,6 @@ val showBottomBarState= navController.currentBackStackEntryAsState().value?.dest
             }
         })
     { paddingValues ->
-        ReconnectNavHost(navController,paddingValues)
+        ReconnectNavHost(navController,paddingValues,authViewModel)
     }
 }

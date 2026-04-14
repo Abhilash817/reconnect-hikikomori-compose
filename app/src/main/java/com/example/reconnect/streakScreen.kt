@@ -47,6 +47,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,16 +60,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.example.reconnect.RoomUser.StreakViewModel
 import com.example.reconnect.composables.ReconnectStreakTopAppBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true)
 @Composable
-fun StreakScreen(onBack:()->Unit={}, paddingValues: PaddingValues=PaddingValues(0.dp)) {
-    val scrollState = rememberScrollState()
+fun StreakScreen(onBack:()->Unit={}, paddingValues: PaddingValues=PaddingValues(0.dp),
+                 stViewModel: StreakViewModel=viewModel()) {
+    val streakState by stViewModel.streakFlow.collectAsStateWithLifecycle()
     BackHandler {
         onBack()
     }
@@ -85,7 +90,7 @@ fun StreakScreen(onBack:()->Unit={}, paddingValues: PaddingValues=PaddingValues(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                ReconnectStreakTopAppBar()
+                ReconnectStreakTopAppBar(stViewModel)
             }
             item {
                 Spacer(modifier = Modifier.height(20.dp))
@@ -102,7 +107,7 @@ fun StreakScreen(onBack:()->Unit={}, paddingValues: PaddingValues=PaddingValues(
 
                     StatsCard(modifier=Modifier.weight(1f),
                         text1="Longest Streak",
-                        text2="7 D",
+                        text2="${streakState?.longestStreak}D",
                         icon = Icons.Default.CheckCircle,
                         iconColor=colorResource(R.color.Primary_Blue))
 
@@ -303,8 +308,8 @@ fun StatsCard(
                         .padding(5.dp),
                     tint = iconColor
                 )
-
             }
+            Spacer(modifier=Modifier.width(10.dp))
             Column(modifier=Modifier.weight(1f)
             ) {
                 Text(

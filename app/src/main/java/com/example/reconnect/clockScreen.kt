@@ -1,5 +1,6 @@
 package com.example.reconnect
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -42,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,12 +55,18 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.reconnect.RoomUser.StreakViewModel
 import kotlinx.coroutines.Dispatchers
 
 // Clock with 2 Text composable inside the Column
 
 @Composable
-fun ClockScreen(viewModel: ReconnectViewModel= viewModel(),onNavigateToHomeScreen: () -> Unit) {
+fun ClockScreen(viewModel: ReconnectViewModel= viewModel(),
+                onNavigateToHomeScreen: () -> Unit,
+                stViewModel: StreakViewModel
+) {
+    val clockState by viewModel.clockStatus.collectAsStateWithLifecycle()
+    val context = LocalContext.current
     val lifeCycleOwner= LocalLifecycleOwner.current
     var playbutton by rememberSaveable {
         mutableStateOf(true)
@@ -80,6 +89,12 @@ fun ClockScreen(viewModel: ReconnectViewModel= viewModel(),onNavigateToHomeScree
 
         onDispose{
             lifeCycleOwner.lifecycle.removeObserver(lifeCycleObserver)
+        }
+    }
+    LaunchedEffect(clockState) {
+        if(clockState.clockStatus==true) {
+            Toast.makeText(context, "Timer Completed", Toast.LENGTH_SHORT).show()
+            stViewModel.updateStreak()
         }
     }
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->

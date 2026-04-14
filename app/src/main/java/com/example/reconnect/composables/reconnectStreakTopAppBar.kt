@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -31,13 +32,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.reconnect.R
-
-
+import com.example.reconnect.RoomUser.StreakViewModel
 
 
 @Composable
-fun ReconnectStreakTopAppBar() {
+fun ReconnectStreakTopAppBar(stViewModel: StreakViewModel) {
+    val streakState by stViewModel.streakFlow.collectAsStateWithLifecycle()
+
     Card(modifier=Modifier.fillMaxWidth().requiredHeight(300.dp).padding(0.dp),
         colors = CardDefaults.cardColors(containerColor = colorResource(R.color.Light_Orange))) {
         Column(modifier=Modifier.fillMaxSize().padding(0.dp),
@@ -55,7 +58,7 @@ fun ReconnectStreakTopAppBar() {
                 )
             }
             Spacer(modifier=Modifier.height(10.dp))
-            Text(text="7 days",
+            Text(text="${streakState?.streak} days",
                 style = TextStyle(fontSize = 36.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(R.color.Orange)))

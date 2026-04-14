@@ -1,14 +1,9 @@
 package com.example.reconnect
 
-import android.content.DialogInterface
+
 import android.util.Log
-import androidx.annotation.ColorRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,14 +14,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.MobileFriendly
 import androidx.compose.material.icons.filled.People
@@ -41,24 +34,17 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAbsoluteAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,24 +52,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.reconnect.RoomUser.StreakViewModel
 import com.example.reconnect.composables.ReconnectTopAppBar
-
+import com.example.reconnect.usageManager.todayScreenTime
+import com.example.reconnect.usageManager.yesterdayScreenTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScreen: () -> Unit={},
-               paddingValues: PaddingValues) {
+               paddingValues: PaddingValues,
+               stViewModel: StreakViewModel=viewModel()){
+    val streakState=stViewModel.streakFlow.collectAsStateWithLifecycle()
+    val streakCount = streakState.value?.streak ?: 0
     val scrollState = rememberScrollState()
     var checkedState by remember {
         mutableStateOf(false)
     }
     var checkBoxText by remember { mutableStateOf("Mark as completed") }
-
+    val context=LocalContext.current
     val currentState=viewModel.timer.collectAsStateWithLifecycle()
     val minutes=(currentState.value.CurrentSeconds/60).toString().padStart(2,'0')
     val seconds=(currentState.value.CurrentSeconds%60).toString().padStart(2,'0')
-
+    val todayScreenTime=todayScreenTime(context)
+    val yesterdayScreenTime= yesterdayScreenTime(context)
+    val todayScreenMinutes=(todayScreenTime/1000/60)%60
+    val todayScreenHours=(todayScreenTime/1000/60)/60
     Scaffold(
         modifier = Modifier.fillMaxSize().padding(paddingValues),
         topBar = {ReconnectTopAppBar() },
@@ -151,13 +145,14 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Todays,Screen Time",
+                            text = "Today's,Screen Time",
                             modifier = Modifier.padding(bottom = 4.dp),
                             fontSize = 14.sp,
                             color = colorResource(R.color.Medium_Gray)
                         )
                         Text(
-                            text = "3h 24m",
+
+                            text = "${todayScreenHours}h:${todayScreenMinutes}m",
                             modifier = Modifier.padding(bottom = 4.dp),
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
@@ -165,7 +160,7 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
                         )
 
                         Text(
-                            text = "-42m from yesterday",
+                            text = yesterdayVsToday(todayScreenTime,yesterdayScreenTime),
                             modifier = Modifier.padding(bottom = 4.dp),
                             fontSize = 12.sp,
                             color = colorResource(R.color.Medium_Gray)
@@ -206,7 +201,7 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
                             color = colorResource(R.color.Medium_Gray)
                         )
                         Text(
-                            text = "${minutes} minutes left",
+                            text = "$minutes minutes left",
                             modifier = Modifier.padding(bottom = 4.dp),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -323,6 +318,7 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
                                     checkedState = !checkedState
                                     if (checkedState) {
                                         checkBoxText = "Completed"
+                                        stViewModel.updateStreak()
                                     } else {
                                         checkBoxText = "Mark as completed"
                                     }
@@ -380,8 +376,9 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
                             fontWeight = FontWeight.Normal,
                             color = colorResource(R.color.Orange)
                         )
+
                         Text(
-                            text = "7 days",
+                            text = "${streakCount}days",
                             modifier = Modifier.padding(bottom = 4.dp),
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
@@ -404,4 +401,16 @@ fun HomeScreen(viewModel: ReconnectViewModel= viewModel(), onNavigateToClockScre
 fun HomeScreenPreview(){
     HomeScreen(paddingValues = PaddingValues(20.dp), onNavigateToClockScreen = {})
 
+}
+
+fun yesterdayVsToday(todayUsage:Long,yesterdayUsage:Long):String {
+    var extraUsage: Long
+    if (todayUsage > yesterdayUsage) {
+        extraUsage = todayUsage - yesterdayUsage
+        return "+${(extraUsage / 1000 / 60) / 60}h ${(extraUsage / 1000 / 60) % 60}m"
+    } else {
+        extraUsage=yesterdayUsage-todayUsage
+        return "-${(extraUsage/1000/60)/60}h ${(extraUsage/1000/60)%60}m"
+
+    }
 }
