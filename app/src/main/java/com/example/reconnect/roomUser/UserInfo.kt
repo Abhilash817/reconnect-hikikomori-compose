@@ -1,18 +1,16 @@
-package com.example.reconnect.RoomUser
+package com.example.reconnect.roomUser
 
-import android.text.style.TtsSpan
-import androidx.compose.material3.DatePicker
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.text.DateFormat
+import java.time.LocalDate
 import java.util.Date
 import java.util.UUID
 
 @Entity(tableName = "User", indices =[Index(value = ["email"], unique = true)])
 data class UserInfo(
     @PrimaryKey
-    val id:String= UUID.randomUUID().toString(),
+    val id:String= "",
     val name:String,
     val age:Int,
     val email: String,
@@ -27,8 +25,31 @@ data class UserStreak(
     val id:Int=1 ,
     val streak:Int=0,
     val longestStreak:Int=0,
-    val lastStreakDate:Long=0
+    val lastStreakDate:Long=0,
+    val activeDays:Int=0
 )
+
+@Entity(tableName="UserStreakHistory")
+data class UserStreakHistory(
+    @PrimaryKey
+    val date: LocalDate,
+    val streakStatus: StreakStatus=StreakStatus.NotCompleted
+)
+
+
+
+
+
+
+
+enum class StreakStatus {
+    Completed ,
+    NotCompleted
+}
+
+
+
+
 
 @Entity(tableName="UserActivity")
 data class UserActivity(

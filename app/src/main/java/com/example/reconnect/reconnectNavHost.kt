@@ -8,9 +8,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.reconnect.RoomUser.AuthViewModel
-import com.example.reconnect.RoomUser.StreakViewModel
+import com.example.reconnect.roomUser.AuthViewModel
+import com.example.reconnect.roomUser.StreakViewModel
 import com.example.reconnect.settingcomposables.SettingsScreen
+import com.example.reconnect.streakComposables.StreakScreen
 
 @Composable
 fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValues,authViewModel: AuthViewModel){
@@ -35,12 +36,16 @@ fun ReconnectNavHost(navController: NavHostController,paddingValues: PaddingValu
                 HomeScreen(viewModel,onNavigateToClockScreen,paddingValues,stViewModel)
             }
             composable("StreakRoute") {
-                StreakScreen(  {navController.navigate("HomeRoute"){
-                    popUpTo(navController.graph.findStartDestination().id){
-                        inclusive=true
-                    }
-                }},paddingValues = paddingValues,
-                    stViewModel)
+                StreakScreen(
+                    {
+                        navController.navigate("HomeRoute") {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                inclusive = true
+                            }
+                        }
+                    }, paddingValues = paddingValues,
+                    stViewModel
+                )
 
             }
             composable("SettingsRoute") {

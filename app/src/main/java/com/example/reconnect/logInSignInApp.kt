@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.rememberNavController
-import com.example.reconnect.RoomUser.AuthViewModel
+import com.example.reconnect.roomUser.AuthViewModel
 
 @Composable
 fun LoginSigninApp(vm: AuthViewModel){

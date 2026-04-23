@@ -1,7 +1,7 @@
-package com.example.reconnect.RoomUser
+package com.example.reconnect.roomUser
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import java.time.LocalDate
 
 
 class AuthRepository(private val userDao: UserDao){
@@ -28,6 +28,15 @@ class AuthRepository(private val userDao: UserDao){
 
     fun getUsageByDate(date:String):Flow<UserUsageInsights?>{
         return userDao.getUsageByDate(date)
+    }
+
+
+    suspend fun insertStreakHistory(userStreakHistory: UserStreakHistory) {
+        userDao.insertStreakHistory(userStreakHistory)
+    }
+
+    fun getStreakHistoryByDate(startDate: LocalDate, endDate:LocalDate):Flow<List<UserStreakHistory>>{
+      return  userDao.getStreakHistoryByDate(startDate,endDate)
     }
 
 }

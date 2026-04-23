@@ -20,15 +20,7 @@ fun sechduleDailyWorkRequest(context: Context){
 
     val workRequest= PeriodicWorkRequestBuilder<UsageWorker>(1,
         TimeUnit.DAYS
-    ).setConstraints(
-        Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresStorageNotLow(true)
-            .setRequiresCharging(true)
-            .build()
-    )
-        .setInitialDelay(delay,TimeUnit.MILLISECONDS)
+    ).setInitialDelay(delay,TimeUnit.MILLISECONDS)
         .build()
     WorkManager.getInstance(context).
     enqueueUniquePeriodicWork("UsageDataSave",

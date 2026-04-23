@@ -1,11 +1,11 @@
-package com.example.reconnect.RoomUser
+package com.example.reconnect.roomUser
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import java.time.LocalDate
 
 @Dao
 interface UserDao {
@@ -19,7 +19,7 @@ interface UserDao {
     suspend fun insertStreak(userStreak:UserStreak)
 
 
-    @Query(value="Select id,streak,longestStreak,lastStreakDate from UserStreak ")
+    @Query(value="Select id,streak,longestStreak,lastStreakDate,activeDays from UserStreak ")
      fun getStreak(): Flow<UserStreak?>
 
 
@@ -28,6 +28,15 @@ interface UserDao {
 
      @Query("Select * From UserUsageInsights Where date=:date")
       fun getUsageByDate(date:String):Flow<UserUsageInsights?>
+
+      @Insert(onConflict = OnConflictStrategy.REPLACE)
+      suspend fun insertStreakHistory(userStreakHistory: UserStreakHistory)
+
+      @Query("Select * From UserStreaKHistory Where date between :startDate and :endDate ")
+      fun getStreakHistoryByDate(startDate: LocalDate, endDate:LocalDate):Flow<List<UserStreakHistory>>
+
+
+
 
 
 

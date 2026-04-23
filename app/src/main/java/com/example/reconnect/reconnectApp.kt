@@ -7,21 +7,16 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
 
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults.windowInsets
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.reconnect.RoomUser.AuthViewModel
+import com.example.reconnect.roomUser.AuthViewModel
 import com.example.reconnect.composables.ReconnectBottomAppBar
 
 @Composable

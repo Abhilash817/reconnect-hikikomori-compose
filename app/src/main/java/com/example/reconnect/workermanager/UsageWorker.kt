@@ -1,19 +1,16 @@
 package com.example.reconnect.workermanager
 
 import android.content.Context
-import androidx.compose.material3.DatePicker
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.reconnect.RoomUser.AuthRepository
-import com.example.reconnect.RoomUser.DatabaseProvider
-import com.example.reconnect.RoomUser.UserUsageInsights
+import com.example.reconnect.roomUser.AuthRepository
+import com.example.reconnect.roomUser.DatabaseProvider
+import com.example.reconnect.roomUser.UserUsageInsights
 import com.example.reconnect.usageManager.behaviorScore
 import com.example.reconnect.usageManager.getStartOfToday
 import com.example.reconnect.usageManager.todayScreenTime
 import com.example.reconnect.usageManager.unlockCount
 import java.time.LocalDate
-import java.util.Date
 
 class UsageWorker(context: Context, workerParams: WorkerParameters):
     CoroutineWorker(context,workerParams){

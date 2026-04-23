@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.reconnect.RoomUser.StreakViewModel
+import com.example.reconnect.roomUser.StreakViewModel
 import com.example.reconnect.composables.ReconnectTopAppBar
 import com.example.reconnect.usageManager.todayScreenTime
 import com.example.reconnect.usageManager.yesterdayScreenTime

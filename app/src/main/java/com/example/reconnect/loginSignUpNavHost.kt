@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.reconnect.RoomUser.AuthViewModel
+import com.example.reconnect.roomUser.AuthViewModel
 
 @Composable
 fun LoginSignUpNavHost(vm: AuthViewModel, navController: NavHostController, paddingValues: PaddingValues){

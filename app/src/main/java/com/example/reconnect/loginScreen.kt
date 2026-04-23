@@ -1,8 +1,6 @@
 package com.example.reconnect
 
 
-import android.R.attr.enabled
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +25,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 
@@ -36,11 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,8 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.reconnect.RoomUser.AuthState
-import com.example.reconnect.RoomUser.AuthViewModel
+import com.example.reconnect.roomUser.AuthViewModel
 import com.example.reconnect.composables.ReconnectTextFieldComposable
 
 
@@ -75,7 +69,7 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
               Toast.makeText(context,"Login Successful",Toast.LENGTH_SHORT).show()
           }
               loginState.error?.let{
-              Toast.makeText(context,loginState.error,Toast.LENGTH_SHORT).show()
+              Toast.makeText(context,"An Error occured",Toast.LENGTH_SHORT).show()
           }
 
         }
@@ -188,7 +182,7 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
                         keyboardActions = KeyboardActions(
                             onAny = {
                                 keyboardController?.hide()
-                                vm.checkUser(email.value, password.value)
+                                vm.signIn(email.value, password.value)
                             }
                         ),
                         keyboardOptions = KeyboardOptions(
@@ -200,7 +194,7 @@ fun LoginScreen(vm: AuthViewModel, paddingValues: PaddingValues=PaddingValues(0.
             Spacer(modifier = Modifier.height(20.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(0.8f).height(50.dp).clickable(enabled = !loginState.isLoading) {
-                    vm.checkUser(email.value, password.value)
+                    vm.signIn(email.value, password.value)
                     keyboardController?.hide()
                 },
                 colors = CardDefaults.cardColors(containerColor = colorResource(R.color.Form_Label_Icons)),
